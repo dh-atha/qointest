@@ -34,14 +34,19 @@ func game(n int, m int) {
 			fmt.Println(fmt.Sprint("Pemain ", i, ": ", currentResult))
 		}
 
+		var activePlayers int
 		for key := range currentDaduGame {
 			for _, dadu := range currentDaduGame[key] {
 				if dadu == 1 {
 					daduMap[key]--
-					if key == n {
-						daduMap[1]++
-					} else {
-						daduMap[key+1]++
+					for j := key + 1; j <= n; j++ {
+						if daduMap[j] != 0 {
+							daduMap[j]++
+						} else if j == n {
+							j = 0
+						} else if j == key {
+							break
+						}
 					}
 				} else if dadu == 6 {
 					daduMap[key]--
@@ -49,10 +54,11 @@ func game(n int, m int) {
 				}
 			}
 
-			if daduMap[key] == 0 {
-				players--
+			if daduMap[key] != 0 {
+				activePlayers++
 			}
 		}
+		players = activePlayers
 
 		fmt.Println()
 		steps++
